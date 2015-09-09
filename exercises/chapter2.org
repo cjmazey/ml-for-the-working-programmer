@@ -39,21 +39,21 @@ Names, Functions and Types
 #+BEGIN_SRC sml
   fun digit i = chr (i + ord #"0")
 
-  val it = digit ~1
-  val it = digit 10
+  val x = digit ~1
+  val y = digit 10
 #+END_SRC
 
 #+RESULTS:
 : val digit = fn : int -> char
-: val it = <hidden-value> : char
-: val it = #":" : char
+: val x = #"/" : char
+: val y = #":" : char
 
    In the second case, we will get errors:
 #+BEGIN_SRC sml
   fun digit i = String.sub ("0123456789", i)
 
-  val it = digit ~1
-  val it = digit 10
+  val x = digit ~1
+  val y = digit 10
 #+END_SRC
 
 #+RESULTS:
@@ -61,3 +61,31 @@ Names, Functions and Types
 : uncaught exception Subscript [subscript out of bounds]
 
 ** Exercise 2.5
+
+#+BEGIN_SRC sml
+  fun f (d, m) =
+     (m = "January" andalso 1 <= d andalso d <= 31)
+     orelse (m = "February" andalso 1 <= d andalso d <= 28)
+     orelse (m = "March" andalso 1 <= d andalso d <= 31)
+     orelse (m = "April" andalso 1 <= d andalso d <= 30)
+     orelse (m = "May" andalso 1 <= d andalso d <= 31)
+     orelse (m = "June" andalso 1 <= d andalso d <= 30)
+     orelse (m = "July" andalso 1 <= d andalso d <= 31)
+     orelse (m = "August" andalso 1 <= d andalso d <= 31)
+     orelse (m = "September" andalso 1 <= d andalso d <= 30)
+     orelse (m = "October" andalso 1 <= d andalso d <= 31)
+     orelse (m = "November" andalso 1 <= d andalso d <= 30)
+     orelse (m = "December" andalso 1 <= d andalso d <= 31)
+
+  val x = f (25, "October")
+  val y = f (42, "November")
+  val z = f (7, "Foobarber")
+#+END_SRC
+
+#+RESULTS:
+: val f = fn : int * string -> bool
+: val x = true : bool
+: val y = false : bool
+: val z = false : bool
+
+** Exercise 2.6
