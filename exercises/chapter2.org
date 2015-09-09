@@ -33,3 +33,31 @@ Names, Functions and Types
 : val g = fn : int -> int
 
 ** Exercise 2.4
+
+   In the first case, we'll get whatever character comes before =0=
+   and after =9=:
+#+BEGIN_SRC sml
+  fun digit i = chr (i + ord #"0")
+
+  val it = digit ~1
+  val it = digit 10
+#+END_SRC
+
+#+RESULTS:
+: val digit = fn : int -> char
+: val it = <hidden-value> : char
+: val it = #":" : char
+
+   In the second case, we will get errors:
+#+BEGIN_SRC sml
+  fun digit i = String.sub ("0123456789", i)
+
+  val it = digit ~1
+  val it = digit 10
+#+END_SRC
+
+#+RESULTS:
+:
+: uncaught exception Subscript [subscript out of bounds]
+
+** Exercise 2.5
