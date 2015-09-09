@@ -1,0 +1,35 @@
+* Chapter 2
+
+Names, Functions and Types
+
+** Exercise 2.1
+
+   The SML/NJ interpreter can be started with
+#+BEGIN_SRC sh
+  sml
+#+END_SRC
+
+   A file "foo.sml" can be read in (as if it had been typed) with
+#+BEGIN_SRC sml
+  use "foo.sml";
+#+END_SRC
+
+** Exercise 2.2
+
+   No. . .integers are exact.
+
+** Exercise 2.3
+
+   Just =g=.
+#+BEGIN_SRC sml
+  fun double n = 2 * n
+  fun f u = Math.sin u / u
+  fun g k = ~k * k
+#+END_SRC
+
+#+RESULTS:
+: val double = fn : int -> int
+: val f = fn : real -> real
+: val g = fn : int -> int
+
+** Exercise 2.4
