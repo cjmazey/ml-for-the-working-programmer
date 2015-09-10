@@ -150,3 +150,31 @@ Names, Functions and Types
 : val z = (0,~19,~11) : int * int * int
 
 ** Exercise 2.8
+
+   Yes, it does.
+#+BEGIN_SRC sml
+  (* val lifetime : {born: int,
+   ,*                 crowned: 'a,
+   ,*                 died: int,
+   ,*                 name: 'b,
+   ,*                 quote: 'c}
+   ,*                -> int
+   ,*)
+  fun lifetime {born, crowned, died, name, quote} = died - born
+#+END_SRC
+
+#+RESULTS:
+: - = val lifetime = fn : {born:int, crowned:'a, died:int, name:'b, quote:'c} -> int
+
+** Exercise 2.9
+
+   The selector =#born= can be applied to any record with at least
+   that label.  The function can only be applied if it is the only label.
+#+BEGIN_SRC sml
+  (* val born : {born 'a} -> 'a *)
+
+  fun born {born} = born
+#+END_SRC
+
+#+RESULTS:
+: val born = fn : {born:'a} -> 'a
