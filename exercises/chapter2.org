@@ -91,3 +91,26 @@ Names, Functions and Types
 : val z = false : bool
 
 ** Exercise 2.6
+
+#+BEGIN_SRC sml
+  type time = int * int * string
+
+  fun f (((h1, m1, p1), (h2, m2, p2)) : time * time) : bool =
+     p1 < p2
+     orelse h1 < h2
+     orelse h1 = h2
+            andalso m1 < m2
+
+  val x = f ((11, 59, "AM"), (1, 15, "PM"))
+  val y = f ((11, 59, "PM"), (1, 15, "PM"))
+  val z = f ((6, 29, "AM"), (6, 33, "AM"))
+#+END_SRC
+
+#+RESULTS:
+: type time = int * int * string
+: val f = fn : time * time -> bool
+: val x = true : bool
+: val y = false : bool
+: val z = true : bool
+
+** Exercise 2.7
