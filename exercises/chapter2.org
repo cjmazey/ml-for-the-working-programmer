@@ -183,17 +183,17 @@ Names, Functions and Types
 ** Exercise 2.10
 
 #+BEGIN_EXAMPLE
-  powOfTwo 8 => 8 = 1 orelse (even 8 andalso ...)
-             => even 8 andalso powOfTwo (8 div 2)
-             => powOfTwo 4
-             => 4 = 1 orelse (even 4 andalso ...)
-             => even 4 andalso powOfTwo (4 div 2)
-             => powOfTwo 2
-             => 2 = 1 orelse (even 2 andalso ...)
-             => even 2 andalso powOfTwo (2 div 2)
-             => powOfTwo 1
-             => 1 = 1 orelse (even 1 andalso ...)
-             => true
+  powOfTwo 8 ⟹ 8 = 1 orelse (even 8 andalso ...)
+             ⟹ even 8 andalso powOfTwo (8 div 2)
+             ⟹ powOfTwo 4
+             ⟹ 4 = 1 orelse (even 4 andalso ...)
+             ⟹ even 4 andalso powOfTwo (4 div 2)
+             ⟹ powOfTwo 2
+             ⟹ 2 = 1 orelse (even 2 andalso ...)
+             ⟹ even 2 andalso powOfTwo (2 div 2)
+             ⟹ powOfTwo 1
+             ⟹ 1 = 1 orelse (even 1 andalso ...)
+             ⟹ true
 #+END_EXAMPLE
 
 ** Exercise 2.11
@@ -202,3 +202,27 @@ Yes, it is.  Whenever =powOfTwo= is called recursively, the result of
 the call becomes the result of the entire computation.
 
 ** Exercise 2.12
+
+#+BEGIN_EXAMPLE
+  power (2.0, 29) ⟹ 2.0 * power (4.0, 14)
+                  ⟹ 2.0 * power (16.0, 7)
+                  ⟹ 2.0 * (16.0 * power (256.0, 3))
+                  ⟹ 2.0 * (16.0 * (256.0 * power (65536.0, 1)))
+                  ⟹ 2.0 * (16.0 * (256.0 * 65536.0))
+                  ⟹ 2.0 * (16.0 * 16777216.0)
+                  ⟹ 2.0 * 268435456.0
+                  ⟹ 536870912.0
+#+END_EXAMPLE
+
+** Exercise 2.13
+
+If the power we're raising to is of the form =2ⁿ - 1=, then every step
+will result in two multiplications.  There will be =n - 1= steps, and
+therefore =2∙n - 2= multiplications.
+
+** Exercise 2.14
+
+Needless and possibly overflowing additional multiplications at the
+end of the computation.  Also, we would have that =0⁰ = 1=.
+
+** Exercise 2.15
