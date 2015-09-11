@@ -1,3 +1,4 @@
+#+STARTUP: indent
 * Chapter 2
 
 Names, Functions and Types
@@ -178,3 +179,26 @@ Names, Functions and Types
 
 #+RESULTS:
 : val born = fn : {born:'a} -> 'a
+
+** Exercise 2.10
+
+#+BEGIN_EXAMPLE
+  powOfTwo 8 => 8 = 1 orelse (even 8 andalso ...)
+             => even 8 andalso powOfTwo (8 div 2)
+             => powOfTwo 4
+             => 4 = 1 orelse (even 4 andalso ...)
+             => even 4 andalso powOfTwo (4 div 2)
+             => powOfTwo 2
+             => 2 = 1 orelse (even 2 andalso ...)
+             => even 2 andalso powOfTwo (2 div 2)
+             => powOfTwo 1
+             => 1 = 1 orelse (even 1 andalso ...)
+             => true
+#+END_EXAMPLE
+
+** Exercise 2.11
+
+Yes, it is.  Whenever =powOfTwo= is called recursively, the result of
+the call becomes the result of the entire computation.
+
+** Exercise 2.12
