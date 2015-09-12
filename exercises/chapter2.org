@@ -242,18 +242,18 @@ Note that
    fib(n + 2) = fib(n + 1) + fib(n)
               = fib(n) + fib(n - 1) + fib(n).
 
-We therefore have that F(n + 2) >= 2*F(n).
+We therefore have that F(n + 2) ≥ 2×F(n).
 
-We know that F(0) >= 1.
+We know that F(0) ≥ 1.
 
-Suppose then that F(2*n) >= 2^n.  Then
+Suppose then that F(2×n) ≥ 2^{n}.  Then
 
-   F(2*(n + 1)) = F(2*n + 2)
-                >= 2*F(2*n)
-                >= 2*2^n
-                = 2^(n + 1).
+   F(2×(n + 1)) = F(2×n + 2)
+                ≥ 2×F(2×n)
+                ≥ 2×2^{n}
+                = 2^{n + 1}.
 
-so that F(n) >= 2^n for all n ∈ ℕ.
+so that F(n) ≥ 2^{n} for all n ∈ ℕ.
 
 ** Exercise 2.17
 
@@ -270,6 +270,6 @@ so that F(n) >= 2^n for all n ∈ ℕ.
 : val itfib = fn : int * ?.intinf * ?.intinf -> IntInf.int
 : val fib = fn : int -> IntInf.int
 
-It seems that itfib (n, F_(k-1), F_k) = F_(n+k-1).
+It seems that itfib (n, F_{k-1}, F_{k}) = F_{n+k-1}.
 
 ** Exercise 2.18
