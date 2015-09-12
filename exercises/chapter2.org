@@ -270,6 +270,6 @@ so that F(n) >= 2^n for all n ∈ ℕ.
 : val itfib = fn : int * ?.intinf * ?.intinf -> IntInf.int
 : val fib = fn : int -> IntInf.int
 
-It seems that itfib (n, F_(k-1), F_k) = F_(n+k-1).
+It seems that $itfib(n, F_{k-1}, F_k) = F_{n+k-1}$.
 
 ** Exercise 2.18
