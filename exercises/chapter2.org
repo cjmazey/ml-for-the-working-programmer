@@ -233,27 +233,32 @@ would help a lot.
 
 ** Exercise 2.16
 
-It is /at least/ exponential in n.
+It is /at least/ exponential in $n$.
 
-Let F(n) denote the number of times fib is called in computing fib(n).
+Let $F(n)$ denote the number of times $fib$ is called in computing
+$fib(n)$.
 
 Note that
 
-   fib(n + 2) = fib(n + 1) + fib(n)
-              = fib(n) + fib(n - 1) + fib(n).
+\begin{eqnarray*}
+   fib(n + 2) & = & fib(n + 1) + fib(n) \\
+              & = & fib(n) + fib(n - 1) + fib(n).
+\end{eqnarray*}
 
-We therefore have that F(n + 2) ≥ 2×F(n).
+We therefore have that $F(n + 2) \ge 2 F(n)$.
 
-We know that F(0) ≥ 1.
+We know that $F(0) \ge 1$.
 
-Suppose then that F(2×n) ≥ 2^{n}.  Then
+Suppose then that $F(2 n) \ge 2^{n}$.  Then
 
-   F(2×(n + 1)) = F(2×n + 2)
-                ≥ 2×F(2×n)
-                ≥ 2×2^{n}
-                = 2^{n + 1}.
+\begin{eqnarray*}
+   F(2 (n + 1)) & =   & F(2 n + 2) \\
+                & \ge & 2 F(2 n) \\
+                & \ge & 2 \cdot 2^{n} \\
+                & =   & 2^{n + 1}.
+\end{eqnarray*}
 
-so that F(n) ≥ 2^{n} for all n ∈ ℕ.
+so that $F(n) \ge 2^{n}$ for all $n \in \mathbb{N}$.
 
 ** Exercise 2.17
 
@@ -270,6 +275,6 @@ so that F(n) ≥ 2^{n} for all n ∈ ℕ.
 : val itfib = fn : int * ?.intinf * ?.intinf -> IntInf.int
 : val fib = fn : int -> IntInf.int
 
-It seems that itfib (n, F_{k-1}, F_{k}) = F_{n+k-1}.
+It seems that $itfib(n, F_{k-1}, F_{k}) = F_{n+k-1}$.
 
 ** Exercise 2.18
