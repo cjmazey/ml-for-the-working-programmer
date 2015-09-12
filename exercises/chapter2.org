@@ -1,4 +1,5 @@
 #+STARTUP: indent
+#+OPTIONS: num:nil
 * Chapter 2
 
 Names, Functions and Types
@@ -226,3 +227,32 @@ Needless and possibly overflowing additional multiplications at the
 end of the computation.  Also, we would have that =0⁰ = 1=.
 
 ** Exercise 2.15
+
+Both repeat computations.  Lazy evalutation doesn't help...memoization
+would help a lot.
+
+** Exercise 2.16
+
+It is /at least/ exponential in n.
+
+Let F(n) denote the number of times fib is called in computing fib(n).
+
+Note that
+
+   fib(n + 2) = fib(n + 1) + fib(n)
+              = fib(n) + fib(n - 1) + fib(n).
+
+We therefore have that F(n + 2) >= 2*F(n).
+
+We know that F(0) >= 1.
+
+Suppose then that F(2*n) >= 2^n.  Then
+
+   F(2*(n + 1)) = F(2*n + 2)
+                >= 2*F(2*n)
+                >= 2*2^n
+                = 2^(n + 1).
+
+so that F(n) >= 2^n for all n ∈ ℕ.
+
+** Exercise 2.17
