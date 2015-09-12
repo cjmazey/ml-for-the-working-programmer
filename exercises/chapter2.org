@@ -256,3 +256,20 @@ Suppose then that F(2*n) >= 2^n.  Then
 so that F(n) >= 2^n for all n ∈ ℕ.
 
 ** Exercise 2.17
+
+#+BEGIN_SRC sml
+  fun itfib (n, prev, curr) : IntInf.int =
+     if n = 1   (* does not work for n = 0 *)
+        then curr
+     else itfib (n - 1, curr, prev + curr)
+
+  fun fib n = itfib (n, 0, 1)
+#+END_SRC
+
+#+RESULTS:
+: val itfib = fn : int * ?.intinf * ?.intinf -> IntInf.int
+: val fib = fn : int -> IntInf.int
+
+It seems that itfib (n, F_(k-1), F_k) = F_(n+k-1).
+
+** Exercise 2.18
