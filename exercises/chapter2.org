@@ -436,3 +436,54 @@ I have no idea how this compares with Euclid's Algorithm.
 : val gcd = fn : IntInf.int * IntInf.int -> IntInf.int
 
 ** Exercise 2.20
+
+Seems like a matter of taste and (shared) context.
+
+#+BEGIN_SRC sml
+  fun fib n =
+     let fun itfib (n, prev, curr) =
+            if n = 1
+               then curr
+            else itfib (n - 1, curr, prev + curr)
+     in
+        itfib (n, 0, 1)
+     end
+#+END_SRC
+
+#+RESULTS:
+: val fib = fn : int -> int
+
+** Exercise 2.21
+
+#+BEGIN_SRC sml
+  (* fun increase (k, n) =
+   ,*    if (k + 1) * (k + 1) > n
+   ,*       then k
+   ,*    else k + 1
+   ,*
+   ,* fun introot n =
+   ,*    if n = 0
+   ,*       then 0
+   ,*    else increase (2 * introot (n div 4), n)
+   ,*)
+  local open IntInf
+  in
+     fun introot n =
+        if n = 0
+           then (0, 0)
+        else let val n' = n div 4
+                 val (k, d) = introot n' (* d = n' - k^2   *)
+                 val u = 4 * (n' - d)    (* u = (2k)^2     *)
+                 val v = u + 4 * k + 1   (* v = (2k + 1)^2 *)
+             in
+                if v > n
+                   then (2 * k, n - u)
+                else (2 * k + 1, n - v)
+             end
+  end
+#+END_SRC
+
+#+RESULTS:
+: val introot = fn : ?.intinf -> IntInf.int * IntInf.int
+
+** Exercise 2.22
