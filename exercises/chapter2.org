@@ -407,3 +407,32 @@ It seems that $itfib(n, F_{k-1}, F_{k}) = F_{n+k-1}$.
 #+END_SRC
 
 ** Exercise 2.19
+
+I have no idea how this compares with Euclid's Algorithm.
+
+#+BEGIN_SRC sml
+  local open IntInf
+  in
+     fun even n = n mod 2 = 0
+     fun odd n = n mod 2 = 1
+     fun gcd (m, n) =
+        if m = n
+           then m
+        else if even m andalso even n
+           then 2 * gcd (m div 2, n div 2)
+        else if even m andalso odd n
+           then gcd (m div 2, n)
+        else if odd m andalso even n
+           then gcd (m, n div 2)
+        else if m < n
+           then gcd ((n - m) div 2, m)
+        else gcd ((m - n) div 2, n)
+  end
+#+END_SRC
+
+#+RESULTS:
+: val even = fn : IntInf.int -> bool
+: val odd = fn : IntInf.int -> bool
+: val gcd = fn : IntInf.int * IntInf.int -> IntInf.int
+
+** Exercise 2.20
