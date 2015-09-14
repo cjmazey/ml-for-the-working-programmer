@@ -628,3 +628,36 @@ structure Rational : ARITH
 #+end_example
 
 ** Exercise 2.26
+
+- =1= is an int type, and defaults to =int=, as we've not said
+  otherwise
+- We compare =n= to =1=, so =n= must be =int=
+- =prev= and =curr= must be the same numeric types, as they are added
+  together.  We cause them to be =IntInf.int=s.
+- Since =curr= can be a result of =itfib=, =itfib='s return type is
+  the same as its.
+
+#+BEGIN_SRC sml
+  fun itfib (n, prev, curr : IntInf.int) =
+     if n = 1
+        then curr
+     else itfib (n - 1, curr, prev + curr)
+#+END_SRC
+
+#+RESULTS:
+: val itfib = fn : int * ?.intinf * IntInf.int -> IntInf.int
+
+** Exercise 2.27
+
+Type checking fails.  =f='s argument must be a pair, and =k - 1= can
+not be a pair, as it must be some int type.
+
+#+BEGIN_SRC sml
+  fun f (k, m) = if k = 0 then 1 else f (k - 1)
+#+END_SRC
+
+#+RESULTS:
+: stdIn:384.12-386.7 Error: operator and operand don't agree [overload conflict]
+:   operator domain: [- ty] * 'Z
+:   operand:         [- ty]
+:   in expression:
