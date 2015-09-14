@@ -526,3 +526,105 @@ Straightforwardly,
 This is quite inefficient, and it is in fact just $p(n) = 2^{n - 1}$:
 
 ** Exercise 2.24
+
+#+NAME: signature_ARITH
+#+BEGIN_SRC sml
+  signature ARITH =
+     sig
+        type t
+
+        val zero: t
+        val sum: t * t -> t
+        val diff: t * t -> t
+        val prod: t * t -> t
+        val quo: t * t -> t
+     end
+#+END_SRC
+
+#+BEGIN_SRC sml :noweb yes
+  <<signature_ARITH>>
+
+  local structure Real: ARITH =
+           struct
+              type t = real
+
+              val zero = 0.0
+              val sum = Real.+
+              val diff = Real.-
+              val prod = Real.*
+              val quo = Real./
+           end
+  in
+     structure Foo = Real
+  end
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+signature ARITH =
+  sig
+    type t
+    val zero : t
+    val sum : t * t -> t
+    val diff : t * t -> t
+    val prod : t * t -> t
+    val quo : t * t -> t
+  end
+structure Foo : ARITH
+#+end_example
+
+** Exercise 2.25
+
+#+BEGIN_SRC sml :noweb yes
+  <<signature_ARITH>>
+
+  structure Rational: ARITH =
+     struct
+        open IntInf
+
+        type t = int * int
+
+        fun gcd (a, b) =
+           if a = 0
+              then b
+           else gcd (b mod a, a)
+
+        fun red (n, d) =
+           let val s = if sameSign (n, d) then 1 else ~1
+               val (n', d') = (abs n, abs d)
+               val v = gcd (n', d')
+           in
+              (s * n' div v, d' div v)
+           end
+
+        val zero: t = (0, 1)
+
+        fun sum ((n, d), (n', d')) =
+           red (n * d' + d * n', d * d')
+
+        fun diff (q, (n, d)) =
+           sum (q, (~n, ~d))
+
+        fun prod ((n, d), (n', d')) =
+           red (n * n', d * d')
+
+        fun quo (q, (n, d)) =
+           prod (q, (d, n))
+     end
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+signature ARITH =
+  sig
+    type t
+    val zero : t
+    val sum : t * t -> t
+    val diff : t * t -> t
+    val prod : t * t -> t
+    val quo : t * t -> t
+  end
+structure Rational : ARITH
+#+end_example
+
+** Exercise 2.26
