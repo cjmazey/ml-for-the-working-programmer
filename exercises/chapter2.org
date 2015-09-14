@@ -487,3 +487,42 @@ Seems like a matter of taste and (shared) context.
 : val introot = fn : ?.intinf -> IntInf.int * IntInf.int
 
 ** Exercise 2.22
+
+It just swaps the values.
+
+#+BEGIN_SRC sml
+  val pi = 4.0 * Math.atan 1.0
+  and e = Math.exp 1.0
+  and log2 = Math.ln 2.0
+
+  val (pi, log2) = (log2, pi)
+#+END_SRC
+
+#+RESULTS:
+: val pi = <hidden-value> : real
+: val e = 2.71828182846 : real
+: val log2 = <hidden-value> : real
+: val pi = 0.69314718056 : real
+: val log2 = 3.14159265359 : real
+
+** Exercise 2.23
+
+\begin{equation*}
+P_n = 1 + \sum_{k = 1}^{n - 1} P_k
+\end{equation*}
+
+Straightforwardly,
+#+BEGIN_SRC sml
+  fun p n = 1 + s (n - 1)
+  and s k = if k < 1
+               then 0
+            else p k + s (k - 1)
+#+END_SRC
+
+#+RESULTS:
+: val p = fn : int -> int
+: val s = fn : int -> int
+
+This is quite inefficient, and it is in fact just $p(n) = 2^{n - 1}$:
+
+** Exercise 2.24
