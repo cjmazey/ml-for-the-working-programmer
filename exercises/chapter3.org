@@ -1,0 +1,43 @@
+#+STARTUP: indent
+#+OPTIONS: num:nil
+* Chapter 3
+
+Lists
+
+** Exercise 3.1
+
+   #+BEGIN_SRC sml
+     fun maxl ns =
+        if null ns
+           then raise Empty
+        else let val n = hd ns
+                 val ns' = tl ns
+             in
+                if null ns'
+                   then n
+                else let val n' = hd ns'
+                         val ns'' = tl ns'
+                     in
+                        if n < n'
+                           then maxl (n' :: ns'')
+                        else maxl (n :: ns'')
+                     end
+             end
+   #+END_SRC
+
+   #+RESULTS:
+   : val maxl = fn : int list -> int
+
+** Exercise 3.2
+
+   #+BEGIN_SRC sml
+     val rec last =
+        fn [] => raise Empty
+         | [x] => x
+         | _ :: xs => last xs
+   #+END_SRC
+
+   #+RESULTS:
+   : val last = fn : 'a list -> 'a
+
+** Exercise 3.3
