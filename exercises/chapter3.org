@@ -86,3 +86,36 @@ latter.
 : val nth = fn : 'a list * int -> 'a
 
 ** Exercise 3.5
+
+#+BEGIN_SRC sml
+  infixr 5 @
+
+  fun ([] @ ys) = ys
+    | (xs @ []) = xs
+    | ((x :: xs) @ ys) = x :: (xs @ ys)
+#+END_SRC
+
+#+RESULTS:
+: infixr 5 @
+: val @ = fn : 'a list * 'a list -> 'a list
+
+** Exercise 3.6
+
+Then =x= must be a list, and =nrev xs= must be the same kind of list,
+and =nrev= takes a list of such lists as its argument, i.e.
+
+=nrev: 'a list list -> 'a list=
+
+and
+
+=nrev [[1,2,3],[4,5,6],[7]]= ==> =[7,4,5,6,1,2,3]=.
+
+#+BEGIN_SRC sml
+  fun nrev' [] = []
+    | nrev' (x :: xs) = (nrev' xs) @ x
+#+END_SRC
+
+#+RESULTS:
+: val nrev' = fn : 'a list list -> 'a list
+
+** Exercise 3.7
