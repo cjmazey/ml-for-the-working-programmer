@@ -119,3 +119,136 @@ and
 : val nrev' = fn : 'a list list -> 'a list
 
 ** Exercise 3.7
+
+#+BEGIN_SRC sml
+  structure Expr =
+     struct
+
+        exception ToList
+
+        datatype expr =
+           Enil
+         | Econs of int * expr
+         | Econs' of int * expr   (* evaluated Econs *)
+         | Eapp of expr * expr
+         | Enrev of expr
+         | ErevAppend of expr * expr
+         | Erev of expr
+
+        fun toList Enil = []
+          | toList (Econs' (x, xs)) = x :: toList xs
+          | toList _ = raise ToList
+
+        val fromList = foldr Econs' Enil
+
+        fun isValue e =
+           case e of
+              Enil => true
+            | Econs' _ => true
+            | _ => false
+
+        fun toString l =
+           case l of
+              Enil => "[]"
+            | Econs (x, xs) => concat [Int.toString x,
+                                       " :: (",
+                                       toString xs,
+                                       ")"]
+            | Econs' _ => concat ["[",
+                                  String.concatWith ","
+                                                    (map Int.toString
+                                                         (toList l)),
+                                  "]"]
+            | Eapp (xs, ys) => concat ["(",
+                                       toString xs,
+                                       ") @ (",
+                                       toString ys,
+                                       ")"]
+            | Enrev xs => concat ["nrev (",
+                                  toString xs,
+                                  ")"]
+            | ErevAppend (xs, ys) => concat ["revAppend (",
+                                             toString xs,
+                                             ", ",
+                                             toString ys,
+                                             ")"]
+            | Erev xs => concat ["rev (",
+                                 toString xs,
+                                 ")"]
+
+        fun step e =
+           case e of
+              Enil => e
+            | Econs (x, xs) => if isValue xs
+                                  then Econs' (x, xs)
+                               else Econs (x, step xs)
+            | Econs' _ => e
+            | Eapp (Enil, ys) => if isValue ys
+                                    then ys
+                                 else Eapp (Enil, step ys)
+            | Eapp (u as Econs' (x, xs), ys) =>
+                 if isValue ys
+                    then Econs (x, Eapp (xs, ys))
+                 else Eapp (u, step ys)
+            | Eapp (xs, ys) => Eapp (step xs, ys)
+            | Enrev Enil => Enil
+            | Enrev (u as Econs' (x, xs)) =>
+                 Eapp (Enrev xs, Econs (x, Enil))
+            | Enrev xs => Enrev (step xs)
+            | ErevAppend (Enil, ys) => if isValue ys
+                                          then ys
+                                       else ErevAppend (Enil, step ys)
+            | ErevAppend (u as Econs' (x, xs), ys) =>
+                 if isValue ys
+                    then ErevAppend (xs, Econs (x, ys))
+                 else ErevAppend (u, step ys)
+            | ErevAppend (xs, ys) => ErevAppend (step xs, ys)
+            | Erev xs => if isValue xs
+                            then ErevAppend (xs, Enil)
+                         else Erev (step xs)
+
+        fun stepN e n = if n < 1 then e else stepN (step e) (n - 1)
+
+        fun run e n =
+          (String.concatWith " ==>\n"
+                             (map toString
+                                  (List.tabulate (n, (stepN e))))) ^ "\n"
+
+        fun test () =
+          let val foo = fromList [1,2,3,4]
+          in
+             print "> nrev <\n"
+             ; print (run (Enrev foo) 26)
+             ; print "\n"
+             ; print "> rev <\n"
+             ; print (run (Erev foo) 11)
+          end
+
+     end
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+structure Expr :
+  sig
+    exception ToList
+    datatype expr
+      = Eapp of expr * expr
+      | Econs of int * expr
+      | Econs' of int * expr
+      | Enil
+      | Enrev of expr
+      | Erev of expr
+      | ErevAppend of expr * expr
+    val toList : expr -> int list
+    val fromList : int list -> expr
+    val isValue : expr -> bool
+    val toString : expr -> string
+    val step : expr -> expr
+    val stepN : expr -> int -> expr
+    val run : expr -> int -> string
+    val test : unit -> unit
+  end
+#+end_example
+
+** Exercise 3.8
