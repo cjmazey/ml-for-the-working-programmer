@@ -41,3 +41,48 @@ Lists
    : val last = fn : 'a list -> 'a
 
 ** Exercise 3.3
+
+=take= returns the whole list on the former, the empty list on the
+latter.
+
+=drop= returns the empty list on the former, the whole list on the
+latter.
+
+#+BEGIN_SRC sml
+  fun take ([], _) = []
+    | take (x :: xs, i) = if i > 0
+                             then x :: take (xs, i - 1)
+                          else []
+
+  fun drop ([], _) = []
+    | drop (x :: xs, i) = if i > 0
+                             then drop (xs, i - 1)
+                          else x :: xs
+
+  fun test () = let val l = [1, 2, 3]
+                in
+                   (take (l, 4),
+                    take (l, ~1),
+                    drop (l, 4),
+                    drop (l, ~1))
+                end
+#+END_SRC
+
+#+RESULTS:
+: val take = fn : 'a list * int -> 'a list
+: val drop = fn : 'a list * int -> 'a list
+: val test = fn : unit -> int list * int list * int list * int list
+
+** Exercise 3.4
+
+#+BEGIN_SRC sml
+  val rec nth =
+     fn ([], _) => raise Empty
+      | (x :: _, 0) => x
+      | (_ :: xs, n) => nth (xs, n - 1)
+#+END_SRC
+
+#+RESULTS:
+: val nth = fn : 'a list * int -> 'a
+
+** Exercise 3.5
