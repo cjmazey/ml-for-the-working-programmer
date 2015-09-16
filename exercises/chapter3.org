@@ -313,3 +313,69 @@ once.  =rtake= builds it twice, but iteratively.
 : val rtake = fn : 'a list * int * 'a list -> 'a list
 
 ** Exercise 3.11
+
+#+BEGIN_SRC sml
+  signature ROMAN =
+     sig
+        exception E
+        val fromInt: int -> string
+     end
+
+  functor Roman (val d: (int * string) list): ROMAN =
+     struct
+        exception E
+
+        local val rec loop =
+                 fn (0, _, r) => r
+                  | (_, [], _) => raise E
+                  | (n, d as (v, s) :: d', r) =>
+                    if v > n
+                       then loop (n, d', r)
+                    else loop (n - v, d, r ^ s)
+        in
+           fun fromInt n = loop (n, d, "")
+        end
+     end
+
+  structure RomanAdditive =
+     Roman (val d = [(1000, "M"),
+                     (500, "D"),
+                     (100, "C"),
+                     (50, "L"),
+                     (10, "X"),
+                     (5, "V"),
+                     (1, "I")])
+
+  structure RomanSubtractive =
+     Roman (val d = [(1000, "M"),
+                     (900, "CM"),
+                     (500, "D"),
+                     (400, "CD"),
+                     (100, "C"),
+                     (90, "XC"),
+                     (50, "L"),
+                     (40, "XL"),
+                     (10, "X"),
+                     (9, "IX"),
+                     (5, "V"),
+                     (4, "IV"),
+                     (1, "I")])
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+signature ROMAN =
+  sig
+    exception E
+    val fromInt : int -> string
+  end
+functor Roman(<param>: sig val d : (int * string) list end) :
+             sig
+               exception E
+               val fromInt : int -> string
+             end
+structure RomanAdditive : ROMAN
+structure RomanSubtractive : ROMAN
+#+end_example
+
+** Exercise 3.12
