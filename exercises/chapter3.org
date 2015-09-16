@@ -252,3 +252,64 @@ structure Expr :
 #+end_example
 
 ** Exercise 3.8
+
+They both do the same thing, and require about the same number of
+steps, but =f= builds up such that it needs space for every element in
+every list; while =concat= needs space for all the sublists, it only
+works on the elements of each one at a time.  (So =f= potentially
+leads to much deeper recursion.)
+
+#+BEGIN_SRC sml
+  infixr 5 @
+  fun ([] @ ys) = ys
+    | ((x :: xs) @ ys)  = x :: (xs @ ys)
+
+  fun concat [] = []
+    | concat (l :: ls) = l @ concat ls
+
+  fun f [] = []
+    | f ([] :: ls) = f ls
+    | f ((x :: l) :: ls) = x :: f (l :: ls)
+#+END_SRC
+
+#+RESULTS:
+: infixr 5 @
+: val @ = fn : 'a list * 'a list -> 'a list
+: val concat = fn : 'a list list -> 'a list
+: val f = fn : 'a list list -> 'a list
+
+** Exercise 3.9
+
+#+BEGIN_SRC sml
+  fun zip ([], _) = []
+    | zip (_, []) = []
+    | zip (x :: xs, y :: ys) = (x, y) :: zip (xs, ys)
+#+END_SRC
+
+#+RESULTS:
+: val zip = fn : 'a list * 'b list -> ('a * 'b) list
+
+** Exercise 3.10
+
+=take= builds up recursions as long as the list, but only builds it
+once.  =rtake= builds it twice, but iteratively.
+
+#+BEGIN_SRC sml
+  fun take ([], i) = []
+    | take (x :: xs, i) =
+         if i > 0
+            then x :: take (xs, i - 1)
+         else []
+
+  fun rtake ([], _, taken) = taken
+    | rtake (x :: xs, i, taken) =
+         if i > 0
+            then rtake (xs, i - 1, x :: taken)
+         else taken
+#+END_SRC
+
+#+RESULTS:
+: val take = fn : 'a list * int -> 'a list
+: val rtake = fn : 'a list * int * 'a list -> 'a list
+
+** Exercise 3.11
