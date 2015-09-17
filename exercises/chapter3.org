@@ -405,3 +405,43 @@ considered.
 #+RESULTS:
 : val allChange = fn
 :   : (int * int) list * (int * int) list * int -> (int * int) list list
+
+** Exercise 3.14
+
+#+BEGIN_SRC sml
+  use "util.sml";
+
+  val gbCoins = [50, 20, 10, 5, 2, 1]
+  val usCoins = [25, 10, 5, 1]
+
+  (* original *)
+  fun allChange (coins, coinvals, 0) = [coins]
+    | allChange (coins, [], amount) = []
+    | allChange (coins, c :: coinvals, amount) =
+         if amount < 0
+            then []
+         else allChange (c :: coins, c :: coinvals, amount - c)
+              @ allChange (coins, coinvals, amount)
+
+  (* accumulating *)
+  local val rec loop =
+           fn (cs, _, 0, r) => cs :: r
+            | (_, [], _, r) => r
+            | (cs, v :: vs, a, r) =>
+              if a < 0
+                 then r
+              else let val r' = loop (cs, vs, a, r)
+                   in
+                      loop (v :: cs, v :: vs, a - v, r')
+                   end
+  in
+     fun allChange' (c, v, a) = loop (c, v, a, [])
+  end
+
+  val _ = time (fn () => allChange ([], gbCoins, 99)) 100
+  val _ = time (fn () => allChange' ([], gbCoins, 99)) 100
+#+END_SRC
+
+#+RESULTS:
+
+** Exercise 3.15
