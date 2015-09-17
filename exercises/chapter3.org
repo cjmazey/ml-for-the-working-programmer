@@ -379,3 +379,29 @@ structure RomanSubtractive : ROMAN
 #+end_example
 
 ** Exercise 3.12
+
+It will simply ignore larger coins when smaller ones have already been
+considered.
+
+** Exercise 3.13
+
+#+BEGIN_SRC sml
+  val rec allChange =
+     fn (change, _, 0) => [change]
+      | (_, [], _) => []
+      | (change, (coin, count) :: purse, amount) =>
+        if amount < 0 orelse count < 1
+           then []
+        else allChange ((coin, count) :: change,
+                        purse,
+                        amount - coin * count)
+             @ allChange (change,
+                          if count > 0
+                             then (coin, count - 1) :: purse
+                          else purse,
+                          amount)
+#+END_SRC
+
+#+RESULTS:
+: val allChange = fn
+:   : (int * int) list * (int * int) list * int -> (int * int) list list
