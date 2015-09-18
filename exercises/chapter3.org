@@ -447,6 +447,8 @@ considered.
 ** Exercise 3.15
 
 #+BEGIN_SRC sml
+  use "util.sml";
+
   structure Binary =
      struct
         val ~ = not
@@ -477,14 +479,10 @@ considered.
                                  Int.* (2, b)))
                       0
 
-        fun fromInt n =
-          let fun loop (n, z) =
-                 if n <= 0
-                    then rev z
-                 else loop (n div 2, (n mod 2 <> 0) :: z)
-          in
-             loop (n, [])
-          end
+        val fromInt =
+           unfoldl (fn n => if n <= 0
+                               then NONE
+                            else SOME (n div 2, n mod 2 <> 0))
      end
 #+END_SRC
 
@@ -502,3 +500,5 @@ structure Binary :
     val fromInt : int -> bool list
   end
 #+end_example
+
+** Exercise 3.16
