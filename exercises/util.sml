@@ -1,6 +1,21 @@
 infixr 0 $
 fun (f $ x) = f x
 
+fun unfoldr f b =
+   let fun loop (b, z) =
+      case f b of
+         NONE => z
+       | SOME (a, b') => loop (b', a :: z)
+   in
+      loop (b, [])
+   end
+
+fun unfoldl f b =
+   let val f' = Option.compose (fn (a, b) => (b, a), f)
+   in
+      rev (unfoldr f' b)
+   end
+
 (* time: (unit -> unit) -> int -> unit
  *
  * run f n times and print timing info

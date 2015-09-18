@@ -445,3 +445,60 @@ considered.
 #+RESULTS:
 
 ** Exercise 3.15
+
+#+BEGIN_SRC sml
+  structure Binary =
+     struct
+        val ~ = not
+
+        fun (a + b) = a orelse b
+
+        fun (a * b) = a andalso b
+
+        val rec carry =
+           fn (false, ps) => ps
+            | (true, []) => [true]
+            | (true, p :: ps) => ~ p :: carry (p, ps)
+
+        val rec sum =
+           fn (c, [], qs) => carry (c, qs)
+            | (c, ps, []) => carry (c, ps)
+            | (c, p :: ps, q :: qs) =>
+              (c <> p <> q) :: sum (c * p + c * q + p * q, ps, qs)
+
+        val rec prod =
+           fn ([], _) => []
+            | (false :: ps, qs) => false :: prod (ps, qs)
+            | (true :: ps, qs) => sum (false, qs, false :: prod (ps, qs))
+
+        val toInt =
+           List.foldr (fn (a, b) =>
+                          Int.+ (if a then 1 else 0,
+                                 Int.* (2, b)))
+                      0
+
+        fun fromInt n =
+          let fun loop (n, z) =
+                 if n <= 0
+                    then rev z
+                 else loop (n div 2, (n mod 2 <> 0) :: z)
+          in
+             loop (n, [])
+          end
+     end
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+structure Binary :
+  sig
+    val ~ : bool -> bool
+    val + : bool * bool -> bool
+    val * : bool * bool -> bool
+    val carry : bool * bool list -> bool list
+    val sum : bool * bool list * bool list -> bool list
+    val prod : bool list * bool list -> bool list
+    val toInt : bool list -> int
+    val fromInt : int -> bool list
+  end
+#+end_example
