@@ -451,6 +451,8 @@ considered.
 
   structure Binary =
      struct
+        exception E
+
         val ~ = not
 
         fun (a + b) = a orelse b
@@ -474,15 +476,24 @@ considered.
             | (true :: ps, qs) => sum (false, qs, false :: prod (ps, qs))
 
         val toInt =
-           List.foldr (fn (a, b) =>
-                          Int.+ (if a then 1 else 0,
-                                 Int.* (2, b)))
-                      0
+           let open Int
+           in
+              foldr (fn (a, b) => (if a then 1 else 0) +  2 * b) 0
+           end
 
         val fromInt =
            unfoldl (fn n => if n <= 0
                                then NONE
                             else SOME (n div 2, n mod 2 <> 0))
+
+        val toString = implode o rev o map (fn false => #"0"
+                                             | true => #"1")
+
+        val fromString = map (fn #"0" => false
+                               | #"1" => true
+                               | _ => raise E)
+                         o rev
+                         o explode
      end
 #+END_SRC
 
@@ -490,6 +501,7 @@ considered.
 #+begin_example
 structure Binary :
   sig
+    exception E
     val ~ : bool -> bool
     val + : bool * bool -> bool
     val * : bool * bool -> bool
@@ -498,7 +510,118 @@ structure Binary :
     val prod : bool list * bool list -> bool list
     val toInt : bool list -> int
     val fromInt : int -> bool list
+    val toString : bool list -> string
+    val fromString : string -> bool list
   end
 #+end_example
 
 ** Exercise 3.16
+
+Combining this exercise with 3.17.
+
+** Exercise 3.17
+
+#+NAME: signature_ARITH
+#+BEGIN_SRC sml
+  signature ARITH =
+     sig
+        type t
+
+        val zero: t
+        val sum: t * t -> t
+        val diff: t * t -> t
+        val prod: t * t -> t
+        val quo: t * t -> t
+     end
+#+END_SRC
+
+#+BEGIN_SRC sml :noweb yes
+  <<signature_ARITH>>
+
+  structure Bin: ARITH =
+     struct
+        exception E
+
+        type t = int list
+
+        val zero = [0]
+
+        val base = [0, 1]
+
+        fun reduce ps =
+           let val rec loop = fn [] => zero
+                               | 0 :: ps => loop ps
+                               | ps => rev ps
+           in
+              loop (rev ps)
+           end
+
+        val isZero = List.all (fn p => p = 0)
+
+        fun carry (0, ps) = ps
+          | carry (1, []) = [1]
+          | carry (1, p :: ps) = (1 - p) :: carry (p, ps)
+          | carry _ = raise E
+
+        fun sum' (c, [], qs) = carry (c, qs)
+          | sum' (c, ps, []) = carry (c, ps)
+          | sum' (c, p :: ps, q :: qs) =
+               ((c + p + q) mod 2) :: sum' ((c + p + q) div 2, ps, qs)
+
+        fun sum (a, b) = reduce (sum' (0, a, b))
+
+        fun borrow (0, ps) = SOME ps
+          | borrow (_, []) = NONE
+          | borrow (1, p :: ps) =
+               Option.map (fn ps' => 1 - p :: ps') (borrow (1 - p, ps))
+          | borrow _ = raise E
+
+        fun diff' (a, []) = SOME a
+          | diff' ([], b) = NONE
+          | diff' (p :: ps, q :: qs) =
+               if p = 0 andalso q = 1
+                  then Option.map (fn x => 1 :: x)
+                                  (Option.mapPartial (fn y => diff' (y, qs))
+                                                     (borrow (1, ps)))
+               else Option.map (fn x => (p - q) :: x) (diff' (ps, qs))
+
+        fun diff (a, b) = reduce (Option.getOpt (diff' (a, b), []))
+
+        fun prod' ([], _) = []
+          | prod' (0 :: ps, qs) = 0 :: prod' (ps, qs)
+          | prod' (1 :: ps, qs) = sum' (0, qs, 0 :: prod' (ps, qs))
+          | prod' _ = raise E
+
+        fun prod (a, b) = reduce (prod' (a, b))
+
+        fun quotRem (n, d) =
+           if isZero d
+              then raise Div
+           else case diff' (n, d) of
+                   NONE => ([0], n)
+                 | SOME _ => let val (q, r) = quotRem (n, prod' (d, [0, 1]))
+                             in
+                                case diff' (r, d) of
+                                   NONE => (0 :: q, r)
+                                 | SOME r' => (1 :: q, r')
+                             end
+
+        fun quo (a, b) = reduce (#1 (quotRem (a, b)))
+     end
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+signature ARITH =
+  sig
+    type t
+    val zero : t
+    val sum : t * t -> t
+    val diff : t * t -> t
+    val prod : t * t -> t
+    val quo : t * t -> t
+  end
+structure Bin : ARITH
+#+end_example
+
+** Exercise 3.18
