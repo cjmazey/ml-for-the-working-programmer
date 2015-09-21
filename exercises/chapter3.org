@@ -707,3 +707,26 @@ empty lists.
 : val transpose = fn : 'a list list -> 'a list list
 
 ** Exercise 3.22
+
+#+BEGIN_SRC sml
+  val matrixNegate : real list list -> real list list =
+     map (map (op ~))
+#+END_SRC
+
+#+RESULTS:
+: val matrixNegate = fn : real list list -> real list list
+
+** Exercise 3.23
+
+#+BEGIN_SRC sml
+  type matrix = real list list
+
+  val matrixSum : matrix * matrix -> matrix =
+     ListPair.mapEq (ListPair.mapEq (op +))
+#+END_SRC
+
+#+RESULTS:
+: type matrix = real list list
+: val matrixSum = fn : matrix * matrix -> matrix
+
+** Exercise 3.24
