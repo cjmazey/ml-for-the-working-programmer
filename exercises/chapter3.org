@@ -682,3 +682,10 @@ structure Bin : ARITH
 :   end
 
 ** Exercise 3.19
+
+They do not consider empty rows (there may be no rows, but not any
+empty ones.)  If any row is shorter than the first, the first thing
+that will happen is that =headcol= will fail to match.  If any are
+longer the excess will be ignored.
+
+** Exercise 3.20
