@@ -689,3 +689,21 @@ that will happen is that =headcol= will fail to match.  If any are
 longer the excess will be ignored.
 
 ** Exercise 3.20
+
+It fails to terminate.  It tries to construct an infinite list of
+empty lists.
+
+** Exercise 3.21
+
+#+BEGIN_SRC sml
+  fun transpose m =
+     case rev m of
+        [] => raise (Fail "matrix row error")
+      | [] :: _ => raise (Fail "matrix column error")
+      | r :: rs => foldl (ListPair.mapEq (op ::)) (map (fn e => [e]) r) rs
+#+END_SRC
+
+#+RESULTS:
+: val transpose = fn : 'a list list -> 'a list list
+
+** Exercise 3.22
