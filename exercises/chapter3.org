@@ -535,6 +535,7 @@ Combining this exercise with 3.17.
      end
 #+END_SRC
 
+#+NAME: structure_Bin
 #+BEGIN_SRC sml :noweb yes
   <<signature_ARITH>>
 
@@ -625,3 +626,59 @@ structure Bin : ARITH
 #+end_example
 
 ** Exercise 3.18
+
+#+BEGIN_SRC sml :noweb yes
+  <<structure_Bin>>;
+
+  use "util.sml";
+
+  structure Decimal: sig
+                        type t
+                        val toBinary: t -> Bin.t
+                        val fromBinary: Bin.t -> t
+                        val factorial: t -> t
+                        val factorial100: string
+                     end =
+     struct
+        open IntInf
+
+        type t = int list
+
+        fun toBinary d =
+           map toInt (unfoldl (fn n => if n = 0
+                                          then NONE
+                                       else SOME (n div 2, n mod 2))
+                              (foldr (fn (a, b) => a + 10 * b) 0 d))
+
+        fun fromBinary b =
+           unfoldl (fn n => if n = 0
+                               then NONE
+                            else SOME (n div 10, n mod 10))
+                   (foldr (fn (a, b) => a + 2 * b) 0 (map fromInt b))
+
+        fun factorial d =
+           let fun loop (b, z) =
+                  if b = Bin.zero
+                     then z
+                  else loop (Bin.diff (b, [1]), Bin.prod (b, z))
+           in
+              fromBinary (loop (toBinary d, [1]))
+           end
+
+        val factorial100 =
+           (concat o map toString o rev o factorial) [0, 0, 1]
+     end
+#+END_SRC
+
+#+RESULTS:
+: signature ARITH =
+:   sig
+:     type t
+:     val zero : t
+:     val sum : t * t -> t
+:     val diff : t * t -> t
+:     val prod : t * t -> t
+:     val quo : t * t -> t
+:   end
+
+** Exercise 3.19
