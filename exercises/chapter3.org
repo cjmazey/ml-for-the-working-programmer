@@ -738,3 +738,8 @@ place division occurs, it is by =p=, determined by =pivotrow=.  There,
 unknowns, and thus the equations can not be linearly independent.
 
 ** Exercise 3.25
+
+=pivotrow= does; it will just favor the first occurring row.  =delrow=
+indeed deletes the first matching row.
+
+** Exercise 3.26
