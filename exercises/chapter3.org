@@ -730,3 +730,11 @@ empty lists.
 : val matrixSum = fn : matrix * matrix -> matrix
 
 ** Exercise 3.24
+
+Suppose that division by 0 /can/ occur within =gausselim=.  The only
+place division occurs, it is by =p=, determined by =pivotrow=.  There,
+=abs p= >= =abs (hd row)= for all rows in the matrix.  Thus =hd row= =
+0 for all rows.  But now there are =n= equations in only =n - 1=
+unknowns, and thus the equations can not be linearly independent.
+
+** Exercise 3.25
