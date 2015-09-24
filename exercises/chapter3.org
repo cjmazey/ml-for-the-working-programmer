@@ -1,5 +1,7 @@
 #+STARTUP: indent
 #+OPTIONS: num:nil
+#+PROPERTY: header-args:sml :results silent :noweb yes
+
 * Chapter 3
 
 Lists
@@ -25,9 +27,6 @@ Lists
              end
    #+END_SRC
 
-   #+RESULTS:
-   : val maxl = fn : int list -> int
-
 ** Exercise 3.2
 
    #+BEGIN_SRC sml
@@ -36,9 +35,6 @@ Lists
          | [x] => x
          | _ :: xs => last xs
    #+END_SRC
-
-   #+RESULTS:
-   : val last = fn : 'a list -> 'a
 
 ** Exercise 3.3
 
@@ -68,11 +64,6 @@ latter.
                 end
 #+END_SRC
 
-#+RESULTS:
-: val take = fn : 'a list * int -> 'a list
-: val drop = fn : 'a list * int -> 'a list
-: val test = fn : unit -> int list * int list * int list * int list
-
 ** Exercise 3.4
 
 #+BEGIN_SRC sml
@@ -81,9 +72,6 @@ latter.
       | (x :: _, 0) => x
       | (_ :: xs, n) => nth (xs, n - 1)
 #+END_SRC
-
-#+RESULTS:
-: val nth = fn : 'a list * int -> 'a
 
 ** Exercise 3.5
 
@@ -94,10 +82,6 @@ latter.
     | (xs @ []) = xs
     | ((x :: xs) @ ys) = x :: (xs @ ys)
 #+END_SRC
-
-#+RESULTS:
-: infixr 5 @
-: val @ = fn : 'a list * 'a list -> 'a list
 
 ** Exercise 3.6
 
@@ -114,9 +98,6 @@ and
   fun nrev' [] = []
     | nrev' (x :: xs) = (nrev' xs) @ x
 #+END_SRC
-
-#+RESULTS:
-: val nrev' = fn : 'a list list -> 'a list
 
 ** Exercise 3.7
 
@@ -227,30 +208,6 @@ and
      end
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-structure Expr :
-  sig
-    exception ToList
-    datatype expr
-      = Eapp of expr * expr
-      | Econs of int * expr
-      | Econs' of int * expr
-      | Enil
-      | Enrev of expr
-      | Erev of expr
-      | ErevAppend of expr * expr
-    val toList : expr -> int list
-    val fromList : int list -> expr
-    val isValue : expr -> bool
-    val toString : expr -> string
-    val step : expr -> expr
-    val stepN : expr -> int -> expr
-    val run : expr -> int -> string
-    val test : unit -> unit
-  end
-#+end_example
-
 ** Exercise 3.8
 
 They both do the same thing, and require about the same number of
@@ -272,12 +229,6 @@ leads to much deeper recursion.)
     | f ((x :: l) :: ls) = x :: f (l :: ls)
 #+END_SRC
 
-#+RESULTS:
-: infixr 5 @
-: val @ = fn : 'a list * 'a list -> 'a list
-: val concat = fn : 'a list list -> 'a list
-: val f = fn : 'a list list -> 'a list
-
 ** Exercise 3.9
 
 #+BEGIN_SRC sml
@@ -285,9 +236,6 @@ leads to much deeper recursion.)
     | zip (_, []) = []
     | zip (x :: xs, y :: ys) = (x, y) :: zip (xs, ys)
 #+END_SRC
-
-#+RESULTS:
-: val zip = fn : 'a list * 'b list -> ('a * 'b) list
 
 ** Exercise 3.10
 
@@ -307,10 +255,6 @@ once.  =rtake= builds it twice, but iteratively.
             then rtake (xs, i - 1, x :: taken)
          else taken
 #+END_SRC
-
-#+RESULTS:
-: val take = fn : 'a list * int -> 'a list
-: val rtake = fn : 'a list * int * 'a list -> 'a list
 
 ** Exercise 3.11
 
@@ -362,22 +306,6 @@ once.  =rtake= builds it twice, but iteratively.
                      (1, "I")])
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-signature ROMAN =
-  sig
-    exception E
-    val fromInt : int -> string
-  end
-functor Roman(<param>: sig val d : (int * string) list end) :
-             sig
-               exception E
-               val fromInt : int -> string
-             end
-structure RomanAdditive : ROMAN
-structure RomanSubtractive : ROMAN
-#+end_example
-
 ** Exercise 3.12
 
 It will simply ignore larger coins when smaller ones have already been
@@ -401,10 +329,6 @@ considered.
                           else purse,
                           amount)
 #+END_SRC
-
-#+RESULTS:
-: val allChange = fn
-:   : (int * int) list * (int * int) list * int -> (int * int) list list
 
 ** Exercise 3.14
 
@@ -441,8 +365,6 @@ considered.
   val _ = time (fn () => allChange ([], gbCoins, 99)) 100
   val _ = time (fn () => allChange' ([], gbCoins, 99)) 100
 #+END_SRC
-
-#+RESULTS:
 
 ** Exercise 3.15
 
@@ -497,24 +419,6 @@ considered.
      end
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-structure Binary :
-  sig
-    exception E
-    val ~ : bool -> bool
-    val + : bool * bool -> bool
-    val * : bool * bool -> bool
-    val carry : bool * bool list -> bool list
-    val sum : bool * bool list * bool list -> bool list
-    val prod : bool list * bool list -> bool list
-    val toInt : bool list -> int
-    val fromInt : int -> bool list
-    val toString : bool list -> string
-    val fromString : string -> bool list
-  end
-#+end_example
-
 ** Exercise 3.16
 
 Combining this exercise with 3.17.
@@ -536,7 +440,7 @@ Combining this exercise with 3.17.
 #+END_SRC
 
 #+NAME: structure_Bin
-#+BEGIN_SRC sml :noweb yes
+#+BEGIN_SRC sml
   <<signature_ARITH>>
 
   structure Bin: ARITH =
@@ -611,23 +515,9 @@ Combining this exercise with 3.17.
      end
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-signature ARITH =
-  sig
-    type t
-    val zero : t
-    val sum : t * t -> t
-    val diff : t * t -> t
-    val prod : t * t -> t
-    val quo : t * t -> t
-  end
-structure Bin : ARITH
-#+end_example
-
 ** Exercise 3.18
 
-#+BEGIN_SRC sml :noweb yes
+#+BEGIN_SRC sml
   <<structure_Bin>>;
 
   use "util.sml";
@@ -670,17 +560,6 @@ structure Bin : ARITH
      end
 #+END_SRC
 
-#+RESULTS:
-: signature ARITH =
-:   sig
-:     type t
-:     val zero : t
-:     val sum : t * t -> t
-:     val diff : t * t -> t
-:     val prod : t * t -> t
-:     val quo : t * t -> t
-:   end
-
 ** Exercise 3.19
 
 They do not consider empty rows (there may be no rows, but not any
@@ -703,18 +582,12 @@ empty lists.
       | r :: rs => foldl (ListPair.mapEq (op ::)) (map (fn e => [e]) r) rs
 #+END_SRC
 
-#+RESULTS:
-: val transpose = fn : 'a list list -> 'a list list
-
 ** Exercise 3.22
 
 #+BEGIN_SRC sml
   val matrixNegate : real list list -> real list list =
      map (map (op ~))
 #+END_SRC
-
-#+RESULTS:
-: val matrixNegate = fn : real list list -> real list list
 
 ** Exercise 3.23
 
@@ -724,10 +597,6 @@ empty lists.
   val matrixSum : matrix * matrix -> matrix =
      ListPair.mapEq (ListPair.mapEq (op +))
 #+END_SRC
-
-#+RESULTS:
-: type matrix = real list list
-: val matrixSum = fn : matrix * matrix -> matrix
 
 ** Exercise 3.24
 

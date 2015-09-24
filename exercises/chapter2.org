@@ -1,5 +1,7 @@
 #+STARTUP: indent
 #+OPTIONS: num:nil
+#+PROPERTY: header-args:sml :results silent :noweb yes
+
 * Chapter 2
 
 Names, Functions and Types
@@ -29,11 +31,6 @@ Names, Functions and Types
   fun g k = ~k * k
 #+END_SRC
 
-#+RESULTS:
-: val double = fn : int -> int
-: val f = fn : real -> real
-: val g = fn : int -> int
-
 ** Exercise 2.4
 
    In the first case, we'll get whatever character comes before =0=
@@ -45,11 +42,6 @@ Names, Functions and Types
   val y = digit 10
 #+END_SRC
 
-#+RESULTS:
-: val digit = fn : int -> char
-: val x = #"/" : char
-: val y = #":" : char
-
    In the second case, we will get errors:
 #+BEGIN_SRC sml
   fun digit i = String.sub ("0123456789", i)
@@ -57,10 +49,6 @@ Names, Functions and Types
   val x = digit ~1
   val y = digit 10
 #+END_SRC
-
-#+RESULTS:
-:
-: uncaught exception Subscript [subscript out of bounds]
 
 ** Exercise 2.5
 
@@ -86,12 +74,6 @@ Names, Functions and Types
   val z = f (7, "Foobarber")
 #+END_SRC
 
-#+RESULTS:
-: val f = fn : int * string -> bool
-: val x = true : bool
-: val y = false : bool
-: val z = false : bool
-
 ** Exercise 2.6
 
 #+BEGIN_SRC sml
@@ -108,13 +90,6 @@ Names, Functions and Types
   val y = f ((11, 59, "PM"), (1, 15, "PM"))
   val z = f ((6, 29, "AM"), (6, 33, "AM"))
 #+END_SRC
-
-#+RESULTS:
-: type time = int * int * string
-: val f = fn : time * time -> bool
-: val x = true : bool
-: val y = false : bool
-: val z = true : bool
 
 ** Exercise 2.7
 
@@ -142,15 +117,6 @@ Names, Functions and Types
   val z = sub ((0, 0, 1), (1, 0, 0))
 #+END_SRC
 
-#+RESULTS:
-: val toPence = fn : int * int * int -> int
-: val fromPence = fn : int -> int * int * int
-: val add = fn : (int * int * int) * (int * int * int) -> int * int * int
-: val sub = fn : (int * int * int) * (int * int * int) -> int * int * int
-: val x = (2,0,0) : int * int * int
-: val y = (~1,~3,~4) : int * int * int
-: val z = (0,~19,~11) : int * int * int
-
 ** Exercise 2.8
 
    Yes, it does.
@@ -165,9 +131,6 @@ Names, Functions and Types
   fun lifetime {born, crowned, died, name, quote} = died - born
 #+END_SRC
 
-#+RESULTS:
-: - = val lifetime = fn : {born:int, crowned:'a, died:int, name:'b, quote:'c} -> int
-
 ** Exercise 2.9
 
    The selector =#born= can be applied to any record with at least
@@ -177,9 +140,6 @@ Names, Functions and Types
 
   fun born {born} = born
 #+END_SRC
-
-#+RESULTS:
-: val born = fn : {born:'a} -> 'a
 
 ** Exercise 2.10
 
@@ -270,10 +230,6 @@ so that $F(n) \ge 2^{n}$ for all $n \in \mathbb{N}$.
 
   fun fib n = itfib (n, 0, 1)
 #+END_SRC
-
-#+RESULTS:
-: val itfib = fn : int * ?.intinf * ?.intinf -> IntInf.int
-: val fib = fn : int -> IntInf.int
 
 It seems that $itfib(n, F_{k-1}, F_{k}) = F_{n+k-1}$.
 
@@ -430,11 +386,6 @@ I have no idea how this compares with Euclid's Algorithm.
   end
 #+END_SRC
 
-#+RESULTS:
-: val even = fn : IntInf.int -> bool
-: val odd = fn : IntInf.int -> bool
-: val gcd = fn : IntInf.int * IntInf.int -> IntInf.int
-
 ** Exercise 2.20
 
 Seems like a matter of taste and (shared) context.
@@ -449,9 +400,6 @@ Seems like a matter of taste and (shared) context.
         itfib (n, 0, 1)
      end
 #+END_SRC
-
-#+RESULTS:
-: val fib = fn : int -> int
 
 ** Exercise 2.21
 
@@ -483,9 +431,6 @@ Seems like a matter of taste and (shared) context.
   end
 #+END_SRC
 
-#+RESULTS:
-: val introot = fn : ?.intinf -> IntInf.int * IntInf.int
-
 ** Exercise 2.22
 
 It just swaps the values.
@@ -497,13 +442,6 @@ It just swaps the values.
 
   val (pi, log2) = (log2, pi)
 #+END_SRC
-
-#+RESULTS:
-: val pi = <hidden-value> : real
-: val e = 2.71828182846 : real
-: val log2 = <hidden-value> : real
-: val pi = 0.69314718056 : real
-: val log2 = 3.14159265359 : real
 
 ** Exercise 2.23
 
@@ -518,10 +456,6 @@ Straightforwardly,
                then 0
             else p k + s (k - 1)
 #+END_SRC
-
-#+RESULTS:
-: val p = fn : int -> int
-: val s = fn : int -> int
 
 This is quite inefficient, and it is in fact just $p(n) = 2^{n - 1}$:
 
@@ -541,7 +475,7 @@ This is quite inefficient, and it is in fact just $p(n) = 2^{n - 1}$:
      end
 #+END_SRC
 
-#+BEGIN_SRC sml :noweb yes
+#+BEGIN_SRC sml
   <<signature_ARITH>>
 
   local structure Real: ARITH =
@@ -559,23 +493,9 @@ This is quite inefficient, and it is in fact just $p(n) = 2^{n - 1}$:
   end
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-signature ARITH =
-  sig
-    type t
-    val zero : t
-    val sum : t * t -> t
-    val diff : t * t -> t
-    val prod : t * t -> t
-    val quo : t * t -> t
-  end
-structure Foo : ARITH
-#+end_example
-
 ** Exercise 2.25
 
-#+BEGIN_SRC sml :noweb yes
+#+BEGIN_SRC sml
   <<signature_ARITH>>
 
   structure Rational: ARITH =
@@ -613,20 +533,6 @@ structure Foo : ARITH
      end
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-signature ARITH =
-  sig
-    type t
-    val zero : t
-    val sum : t * t -> t
-    val diff : t * t -> t
-    val prod : t * t -> t
-    val quo : t * t -> t
-  end
-structure Rational : ARITH
-#+end_example
-
 ** Exercise 2.26
 
 - =1= is an int type, and defaults to =int=, as we've not said
@@ -644,9 +550,6 @@ structure Rational : ARITH
      else itfib (n - 1, curr, prev + curr)
 #+END_SRC
 
-#+RESULTS:
-: val itfib = fn : int * ?.intinf * IntInf.int -> IntInf.int
-
 ** Exercise 2.27
 
 Type checking fails.  =f='s argument must be a pair, and =k - 1= can
@@ -655,9 +558,3 @@ not be a pair, as it must be some int type.
 #+BEGIN_SRC sml
   fun f (k, m) = if k = 0 then 1 else f (k - 1)
 #+END_SRC
-
-#+RESULTS:
-: stdIn:384.12-386.7 Error: operator and operand don't agree [overload conflict]
-:   operator domain: [- ty] * 'Z
-:   operand:         [- ty]
-:   in expression:
