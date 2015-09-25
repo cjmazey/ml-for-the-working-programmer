@@ -612,3 +612,77 @@ unknowns, and thus the equations can not be linearly independent.
 indeed deletes the first matching row.
 
 ** Exercise 3.26
+
+#+NAME: structure_Matrix
+#+BEGIN_SRC sml
+  structure Matrix =
+     struct
+        type t = real Array2.array
+
+        val fromList = Array2.fromList
+        fun toList a = map (fn i => Vector.foldr (op ::) [] (Array2.row (a, i)))
+                           (List.tabulate (Array2.nRows a, fn x => x))
+
+        fun transpose a = Array2.tabulate Array2.RowMajor
+                                          (Array2.nCols a,
+                                           Array2.nRows a,
+                                           (fn (i, j) => Array2.sub (a, j, i)))
+
+        fun dot (u, v) =
+           if Vector.length u <> Vector.length v
+              then raise Size
+           else Vector.foldli (fn (i, a, r) =>
+                                  Real.*+ (a, Vector.sub (v, i), r))
+                              0.0 u
+
+        fun product (a, b) =
+           if Array2.nCols a <> Array2.nRows b
+              then raise Size
+           else Array2.tabulate Array2.RowMajor
+                                (Array2.nRows a,
+                                 Array2.nCols b,
+                                 fn (i, j) =>
+                                    dot (Array2.row (a, i),
+                                         Array2.column (b, j)))
+
+        fun sum (a, b) =
+           if Array2.dimensions a <> Array2.dimensions b
+              then raise Size
+           else Array2.tabulate Array2.RowMajor
+                                (Array2.nRows a,
+                                 Array2.nCols a,
+                                 fn (i, j) =>
+                                    Real.+ (Array2.sub (a, i, j),
+                                            Array2.sub (b, i, j)))
+
+        (* remove row i and column j *)
+        fun subMatrix (a, i, j) =
+           Array2.tabulate Array2.RowMajor
+                           (Array2.nRows a - 1,
+                            Array2.nCols a - 1,
+                            fn (i', j') =>
+                               Array2.sub (a,
+                                           if i' < i then i' else i' + 1,
+                                           if j' < j then j' else j' + 1))
+
+        fun determinant a =
+           let val (m, n) = Array2.dimensions a
+           in
+              if m <> n orelse m < 1
+                 then raise Size
+              else if m = 1
+                 then Array2.sub (a, 0, 0)
+              else Vector.foldli (fn (j, x, r) =>
+                                     Real.*+ (if j mod 2 = 0 then x else ~x,
+                                              determinant (subMatrix (a, 0, j)),
+                                              r))
+                                 0.0
+                                 (Array2.row (a, 0))
+           end
+
+        val foo = fromList [[1.0, 2.0, 3.0],
+                            [4.0, 5.0, 6.0],
+                            [7.0, 8.0, 9.0]]
+     end
+
+#+END_SRC
