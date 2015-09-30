@@ -79,7 +79,7 @@ functor Lexical (Keyword: KEYWORD) : LEXICAL =
 	    else (*ignore spaces, line breaks, control characters*)
 		 scanning (toks, Substring.dropl (not o Char.isGraph) ss);
 
-  fun scan a = scanning([], Substring.all a);
+  fun scan a = scanning([], Substring.full a);
   end;
 
 

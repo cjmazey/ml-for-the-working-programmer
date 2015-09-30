@@ -340,19 +340,19 @@ initials "My ransom is this frail and worthless trunk";
 
 fun batchInitials (is, os) =
   while not (TextIO.endOfStream is) 
-  do TextIO.output(os, initials (TextIO.inputLine is) ^ "\n");
+  do TextIO.output(os, initials (valOf (TextIO.inputLine is)) ^ "\n");
 
 fun promptInitials (is, os) =
   while (TextIO.output(os, "Input line? ");  TextIO.flushOut os;
 	 not (TextIO.endOfStream is)) 
-  do TextIO.output(os, "Initials:   " ^ initials(TextIO.inputLine is) ^ "\n");
+  do TextIO.output(os, "Initials:   " ^ initials (valOf (TextIO.inputLine is)) ^ "\n");
 
 
 (*** Conversion to HTML ***)
 
 fun firstLine s =
     let val (name,rest) = 
-	        Substring.splitl (fn c => c <> #".") (Substring.all s)
+	        Substring.splitl (fn c => c <> #".") (Substring.full s)
     in  "\n<P><EM>" ^ Substring.string name ^
 	"</EM>"     ^ Substring.string rest
     end;
@@ -360,14 +360,14 @@ fun firstLine s =
 fun htmlCvt fileName =
     let val is = TextIO.openIn fileName
 	and os = TextIO.openOut (fileName ^ ".html")
-        fun cvt _ "" = ()
-	  | cvt _ "\n" = cvt true (TextIO.inputLine is)
-	  | cvt first s =
+        fun cvt _ NONE = ()
+	  | cvt _ (SOME "\n") = cvt true (TextIO.inputLine is)
+	  | cvt first (SOME s) =
 		(TextIO.output (os, 
 				if first then firstLine s
 				else "<BR>" ^ s);
 		 cvt false (TextIO.inputLine is));
-    in  cvt true "\n";  TextIO.closeIn is;  TextIO.closeOut os  end;
+    in  cvt true (SOME "\n");  TextIO.closeIn is;  TextIO.closeOut os  end;
 
 
 
